@@ -34,8 +34,8 @@ output "gitlab_private_subnets" {
 }
 
 output "gitlab_public_subnets" {
-  description = "List of private subnets"
-  value       = module.vpc.private_subnets
+  description = "List of public subnets"
+  value       = module.vpc.public_subnets
 }
 
 output "gitlab_lb_sg_ids" {
@@ -46,4 +46,14 @@ output "gitlab_lb_sg_ids" {
 output "gitlab_gitaly_sg_ids" {
   description = "List of SGs IDs for gitaly instances"
   value       = [module.gitlab_gitaly_sg.this_security_group_id]
+}
+
+output "gitlab_runner_sg_ids" {
+  description = "List of SGs IDs for runner instances"
+  value       = [module.gitlab_runner_sg.this_security_group_id]
+}
+
+output "gitlab_bastion_sg_ids" {
+  description = "List of SGs IDs for bastion instance"
+  value       = [module.gitlab_bastion_sg.this_security_group_id]
 }

@@ -14,6 +14,7 @@ module "vpc" {
   enable_nat_gateway     = true
   single_nat_gateway     = false
   one_nat_gateway_per_az = true
+  create_egress_only_igw = false
 
   create_database_subnet_group    = true
   create_elasticache_subnet_group = true

@@ -25,6 +25,23 @@ module "gitlab_lb_sg" {
       description = "SSH access to gilab front"
       cidr_blocks = "0.0.0.0/0"
     },
+    {
+      from_port   = 8
+      to_port     = 0
+      protocol    = "icmp"
+      description = "ICMP access to gilab front"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Egress traffic"
+      cidr_blocks = "0.0.0.0/0"
+    },
   ]
 
   tags = {
@@ -33,7 +50,7 @@ module "gitlab_lb_sg" {
   }
 }
 
-module "bastion_sg" {
+module "gitlab_bastion_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "3.16.0"
 
@@ -50,6 +67,23 @@ module "bastion_sg" {
       to_port     = 22
       protocol    = "tcp"
       description = "SSH access to gilab front"
+      cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      from_port   = 8
+      to_port     = 0
+      protocol    = "icmp"
+      description = "ICMP access to gilab"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Egress traffic"
       cidr_blocks = "0.0.0.0/0"
     },
   ]
@@ -81,7 +115,24 @@ module "gitlab_gitaly_sg" {
       to_port                  = 22
       protocol                 = "tcp"
       description              = "SSH access from bastion hosts"
-      source_security_group_id = module.bastion_sg.this_security_group_id
+      source_security_group_id = module.gitlab_bastion_sg.this_security_group_id
+    },
+    {
+      from_port                = 8
+      to_port                  = 0
+      protocol                 = "icmp"
+      description              = "ICMP access to gilab"
+      source_security_group_id = module.gitlab_bastion_sg.this_security_group_id
+    },
+  ]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Egress traffic"
+      cidr_blocks = "0.0.0.0/0"
     },
   ]
 
@@ -106,7 +157,24 @@ module "gitlab_runner_sg" {
       to_port                  = 22
       protocol                 = "tcp"
       description              = "SSH access from bastion hosts"
-      source_security_group_id = module.bastion_sg.this_security_group_id
+      source_security_group_id = module.gitlab_bastion_sg.this_security_group_id
+    },
+    {
+      from_port                = 8
+      to_port                  = 0
+      protocol                 = "icmp"
+      description              = "ICMP access to gilab"
+      source_security_group_id = module.gitlab_bastion_sg.this_security_group_id
+    },
+  ]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Egress traffic"
+      cidr_blocks = "0.0.0.0/0"
     },
   ]
 
@@ -131,6 +199,16 @@ module "gitlab_rds_sg" {
     },
   ]
 
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Egress traffic"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+
   tags = {
     Terraform   = "true"
     Environment = var.environment
@@ -152,6 +230,16 @@ module "gitlab_redis_sg" {
       protocol                 = "tcp"
       description              = "Access to redis from app instances"
       source_security_group_id = module.gitlab_lb_sg.this_security_group_id
+    },
+  ]
+
+  egress_with_cidr_blocks = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = -1
+      description = "Egress traffic"
+      cidr_blocks = "0.0.0.0/0"
     },
   ]
 
