@@ -24,3 +24,7 @@ module "vpc" {
     Environment = var.environment
   }
 }
+
+resource "aws_key_pair" "gitlab_keypair" {
+  public_key = var.gitlab_public_ssh_key
+}

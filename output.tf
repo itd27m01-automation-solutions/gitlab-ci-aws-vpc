@@ -57,3 +57,8 @@ output "gitlab_bastion_sg_ids" {
   description = "List of SGs IDs for bastion instance"
   value       = [module.gitlab_bastion_sg.this_security_group_id]
 }
+
+output "gitlab_keypair" {
+  description = "Key pair name for infra tasks"
+  value = aws_key_pair.gitlab_keypair.key_name
+}
