@@ -6,10 +6,12 @@ module "gitlab_lb_sg" {
   description = "Security group for user-service with custom ports open within VPC, and PostgreSQL publicly open"
   vpc_id      = module.vpc.vpc_id
 
-  # NOTE(igortiunov): dont work fo some reason
-  # ingress_rules = ["https-443-tcp", "ssh-22-tcp"]
+  ingress_with_self = [
+    {
+      rule = "all-all"
+    }
+  ]
 
-  # TODO: Are egress rules needed?
   ingress_with_cidr_blocks = [
     {
       from_port   = 443
