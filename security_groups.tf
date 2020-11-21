@@ -171,7 +171,9 @@ module "gitlab_runner_sg" {
   ]
 
   ingress_with_self = [
-    "all-all"
+    {
+      rule = "all-all"
+    },
   ]
 
   egress_with_cidr_blocks = [
